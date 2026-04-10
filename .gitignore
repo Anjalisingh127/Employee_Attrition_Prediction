@@ -1,0 +1,26 @@
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual env
+.venv/
+venv/
+
+# Env
+.env
+
+# Models
+*.pkl
+
+# Sensitive files (IMPORTANT)
+credentials.json
+token.json
+attrition_app/credentials.json
+attrition_app/token.json
+attrition_app/*.json
+
+# VS Code
+.vscode/
