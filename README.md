@@ -3,10 +3,8 @@
 This project was created as a part of CSE343, Machine Learning Course at IIIT Delhi. 
 
 ### Group Members
-1. [Aastha](https://github.com/aastha985 "GitHub Profile")
-2. [Aditi Sejal](https://github.com/asejal "GitHub Profile")
-3. [Vaibhav Soni](https://github.com/vaibhav2808 "GitHub Profile")
-4. [Samad Shahid](https://github.com/SamadShahid "GitHub Profile")
+1. [Anjali Singh](https://github.com/Anjalisingh127 "GitHub Profile")
+2. [Gauri Jakhmola](https://github.com/gaurijakhmola "GitHub Profile")
 
 ## Introduction
 
