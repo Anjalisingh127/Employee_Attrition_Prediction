@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 1.1 — data foundation and validation.**
+**Current milestone: Stage 1.2 — deterministic holdout and leakage-safe feature contract.**
 
 ## Contributors
 
@@ -17,6 +17,7 @@ The repository is being rebuilt from an earlier academic prototype into a reprod
 
 - Python 3.13+
 - pandas
+- scikit-learn
 - Pydantic + pydantic-settings
 - pytest
 - Ruff
@@ -38,7 +39,16 @@ The validation layer currently verifies:
 
 Those checks turn assumptions about the dataset into executable tests instead of undocumented notebook observations.
 
+## Stage 1.2: modeling foundation
+
+Before model development, the project now creates a deterministic 80/20 stratified holdout and removes the target, employee identifier, and three invariant columns from model inputs. This leaves 30 candidate predictors.
+
+The final test partition is reserved for final evaluation. Encoding, scaling, resampling, feature selection, hyperparameter tuning, and threshold selection must be learned from training data only.
+
+See `docs/modeling_protocol.md` for the enforced evaluation rules.
+
 ## Local setup
+
 
 Create or reuse a virtual environment, then install the project in editable mode with development tools:
 
