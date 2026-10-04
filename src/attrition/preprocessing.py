@@ -2,12 +2,14 @@
 
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-from attrition.features import add_business_features
+from attrition.features import ENGINEERED_FEATURES, add_business_features
 
 
 @dataclass(frozen=True)
@@ -18,22 +20,25 @@ class FeatureGroups:
     categorical: tuple[str, ...]
 
 
-class BusinessFeatureTransformer:
+class BusinessFeatureTransformer(TransformerMixin, BaseEstimator):
     """Scikit-learn-compatible deterministic business feature transformer."""
 
     def fit(self, X: pd.DataFrame, y: object = None) -> "BusinessFeatureTransformer":
+        self.feature_names_in_ = np.asarray(X.columns, dtype=object)
         return self
 
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         return add_business_features(X)
 
-    def get_params(self, deep: bool = True) -> dict[str, object]:
-        return {}
+    def get_feature_names_out(
+        self,
+        input_features: object = None,
+    ) -> np.ndarray:
+        """Return original plus deterministic engineered feature names."""
 
-    def set_params(self, **params: object) -> "BusinessFeatureTransformer":
-        if params:
-            raise ValueError(f"unsupported parameters: {sorted(params)}")
-        return self
+        if input_features is None:
+            input_features = self.feature_names_in_
+        return np.asarray([*input_features, *ENGINEERED_FEATURES], dtype=object)
 
 
 def infer_feature_groups(X: pd.DataFrame) -> FeatureGroups:

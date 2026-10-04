@@ -8,7 +8,11 @@ The preprocessing layer is designed to be embedded directly inside future model 
 2. Standardize numeric features with `StandardScaler`.
 3. One-hot encode categorical features with `OneHotEncoder(handle_unknown="ignore")`.
 
-Feature groups are inferred from the training feature frame after deterministic feature engineering. The reference schema contains 27 numeric and 8 categorical columns after the five Stage 3.1 features are added.
+Feature groups are inferred from the training feature frame after deterministic feature engineering. The reference schema contains 28 numeric and 7 categorical columns after the five Stage 3.1 features are added.
+
+## Scikit-learn compatibility
+
+The business-feature step implements the scikit-learn estimator/transformer API, including feature-name propagation. This keeps the complete preprocessing pipeline cloneable for cross-validation and allows transformed feature names to be inspected later for model interpretation.
 
 ## Leakage controls
 

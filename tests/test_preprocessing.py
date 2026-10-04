@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.base import clone
 from sklearn.exceptions import NotFittedError
 
 from attrition.data import load_dataset
@@ -23,9 +24,10 @@ def split():
 def test_feature_groups_cover_engineered_schema(split) -> None:
     groups = infer_feature_groups(split.X_train)
 
-    assert len(groups.numeric) == 27
-    assert len(groups.categorical) == 8
+    assert len(groups.numeric) == 28
+    assert len(groups.categorical) == 7
     assert set(groups.numeric).isdisjoint(groups.categorical)
+    assert len(groups.numeric) + len(groups.categorical) == 35
     assert "Department" in groups.categorical
     assert "IncomePerJobLevel" in groups.numeric
 
@@ -35,6 +37,15 @@ def test_preprocessor_is_unfitted_when_built(split) -> None:
 
     with pytest.raises(NotFittedError):
         preprocessor.transform(split.X_test)
+
+
+def test_preprocessor_is_sklearn_cloneable(split) -> None:
+    preprocessor = build_preprocessor(split.X_train)
+
+    cloned = clone(preprocessor)
+
+    assert cloned is not preprocessor
+    assert cloned.steps[0][0] == "business_features"
 
 
 def test_fit_transform_produces_finite_matrix_without_mutating_training_data(split) -> None:
