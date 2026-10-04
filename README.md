@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 1.2 — deterministic holdout and leakage-safe feature contract.**
+**Current milestone: Stage 2.1 — reproducible EDA and business risk segmentation.**
 
 ## Contributors
 
@@ -47,7 +47,22 @@ The final test partition is reserved for final evaluation. Encoding, scaling, re
 
 See `docs/modeling_protocol.md` for the enforced evaluation rules.
 
+## Stage 2.1: reproducible EDA
+
+Exploratory analysis is implemented as reusable Python functions rather than notebook-only calculations. The first report covers overall attrition, business segment rates, and median comparisons for selected numeric workforce features.
+
+Small groups can be filtered with a minimum-size threshold, and every result is explicitly treated as a descriptive association rather than causal evidence.
+
+Run the machine-readable report with:
+
+```powershell
+attrition-eda
+```
+
+See `docs/eda_protocol.md` for the analysis and interpretation rules.
+
 ## Local setup
+
 
 
 Create or reuse a virtual environment, then install the project in editable mode with development tools:

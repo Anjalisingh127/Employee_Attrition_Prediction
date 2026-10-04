@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "employee-attrition-analytics"
-version = "0.2.0"
+version = "0.3.0"
 description = "Leakage-safe employee attrition prediction and HR analytics project."
 readme = "README.md"
 requires-python = ">=3.13,<3.15"
@@ -23,6 +23,7 @@ dev = [
 
 [project.scripts]
 attrition-validate = "attrition.validation:main"
+attrition-eda = "attrition.eda:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/attrition"]
