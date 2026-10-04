@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 2.2 — reproducible visual analysis and documented business findings.**
+**Current milestone: Stage 3 — deterministic feature engineering and leakage-safe preprocessing.**
 
 ## Contributors
 
@@ -71,7 +71,16 @@ attrition-eda-charts
 
 The documented findings in `docs/eda_findings.md` highlight verified associations around overtime, job role, business travel, satisfaction, work-life balance, and selected numeric workforce measures. They are not presented as causal effects.
 
+## Stage 3: feature engineering and preprocessing
+
+Five deterministic business features capture compensation level, career/company tenure, role tenure, promotion timing, and early-career status without using the target. They are documented in `docs/feature_engineering.md`.
+
+The preprocessing layer then combines those features with training-fitted numeric scaling and one-hot categorical encoding. It is intentionally returned unfitted and will be placed inside every Stage 4 model pipeline so cross-validation learns preprocessing independently within each fold.
+
+See `docs/preprocessing.md` for the schema and leakage controls.
+
 ## Local setup
+
 
 
 
