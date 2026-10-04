@@ -1,99 +1,59 @@
-# Employee Attrition Prediction Using Machine Learning
+# Employee Attrition Prediction & HR Analytics Platform
 
-This project was created as a part of CSE343, Machine Learning Course at IIIT Delhi. 
+An end-to-end machine learning project for analyzing employee attrition patterns and estimating individual attrition risk using the IBM HR Analytics Employee Attrition dataset.
 
-### Group Members
-1. [Anjali Singh](https://github.com/Anjalisingh127 "GitHub Profile")
-2. [Gauri Jakhmola](https://github.com/gaurijakhmola "GitHub Profile")
+## Project status
 
-## Introduction
+This repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project. The current milestone establishes a clean project baseline and preserves the original public dataset for the next modeling stages.
 
-Employee attrition refers to an employee’s voluntary
-or involuntary resignation from a workforce. Organizations spend many resources in hiring talented employees
-and training them. Every employee is critical to a company’s success. Our goal was to predict employee attrition
-and identify the factors contributing to an employee leaving a workforce. We trained various classification models on our dataset and assessed their performance using different metrics such as accuracy, precision, recall and F1 Score. We
-also analyzed the dataset to identify key factors contributing
-to an employee leaving a workforce. Our project will assist organizations in gaining fresh insights into what drives
-attrition and thus enhance retention rate.
+## Contributors
 
-## Methodology
-
-![Methodology Flowchart](./Images/Flowchart.png)
-
-#### Machine Learning Models
-
-We trained and evaluated 9 supervised machine learning classification models.
-
-1. Logistic Regression
-2. Naive Bayes
-3. Decision Tree
-4. Random Forest
-5. AdaBoost
-6. Support Vector Machine
-7. Linear Discriminant Analysis
-8. Multilayer Perceptron
-9. K-Nearest Neighbors
-
-#### Datasets
-We trained our models on 6 different datasets
-1. Imabalanced
-2. Undersampled
-3. Oversampled
-4. PCA
-5. Undersampling With PCA
-6. Oversampling With PCA
-
-Further, to get the best performance, hyperparameter tuning was carried out using RandomSearchCV and GridSearchCV. K-fold cross-validation with 5 folds was also
-performed on the training set. To handle model interpretability, appropriate graphs and figures were used.Accuracy for the attrition decision is a biased metric, and hence we evaluated the model on all the
-following classification metrics: accuracy, precision, recall
-and F1 Score.
+- Anjali Singh — [@Anjalisingh127](https://github.com/Anjalisingh127)
+- Gauri Jakhmola — [@gaurijakhmola](https://github.com/gaurijakhmola)
 
 ## Dataset
-We used the [IBM Employee Attrition dataset from Kaggle](https://www.kaggle.com/pavansubhasht/ibm-hr-analytics-attrition-dataset). It contains 35 columns and 1470 rows and has a mix of
-numerical and categorical features. A sample row is shown below.
 
-<img src="Images/SampleRow.png" height="400">
+The project uses the public IBM HR Analytics Employee Attrition dataset with 1,470 employee records and 35 columns. It is a benchmark/synthetic dataset and should not be interpreted as production HR data.
 
-## Results
+Source data is stored in:
 
-<img src="Images/Table2.png" height="300">
+```text
+data/WA_Fn-UseC_-HR-Employee-Attrition.csv
+```
 
-<img src="Images/Table3.png" height="300">
+## Target architecture
 
-<img src="Images/Table4.png" height="300">
+The finished project will include:
 
+1. reproducible data validation and preprocessing;
+2. exploratory attrition analysis;
+3. business-motivated feature engineering;
+4. leakage-safe class-imbalance handling;
+5. model comparison across Logistic Regression, Random Forest, XGBoost, and LightGBM;
+6. stratified cross-validation and hyperparameter tuning;
+7. evaluation with precision, recall, F1, ROC-AUC, PR-AUC, and confusion matrices;
+8. probability threshold analysis and false-negative review;
+9. SHAP-based global and employee-level explainability;
+10. an interactive Streamlit HR analytics and risk-prediction dashboard.
 
-The figure below shows feature importance w.r.t random forest with oversampling. We observe that the most important
-features were MonthlyIncome followed by OverTime and Age, while the least important features were Performance
-Rating, Gender and BusinessTravel.
+## Important evaluation principle
 
+Accuracy alone is not sufficient for this problem. Because the positive attrition class is imbalanced, the project will prioritize recall, F1, ROC-AUC, PR-AUC, calibration, and interpretability. Any final resume metrics will come from the rebuilt leakage-safe pipeline rather than the legacy prototype.
 
-<img src="Images/FeatureImportance.png" height="500">
+## Repository roadmap
 
-#### Best Performing Model
-The best performance was obtained in Random Forest Model
-with PCA and Oversampling with an accuracy of 99.2%,
-the precision of 98.6%, recall of 99.8% and F1 Score of
-99.2%.
+- **Stage 1 — Data foundation:** dataset audit, schema validation, data dictionary, train/test strategy
+- **Stage 2 — EDA:** attrition distribution and workforce risk patterns
+- **Stage 3 — Feature engineering:** validated, non-leaking business features
+- **Stage 4 — Modeling:** reproducible preprocessing + model baselines
+- **Stage 5 — Imbalance experiments:** class weights, oversampling, SMOTE
+- **Stage 6 — Tuning & evaluation:** stratified 5-fold CV and final test metrics
+- **Stage 7 — Explainability:** feature importance, permutation importance, SHAP
+- **Stage 8 — Streamlit application:** workforce analytics and employee risk scoring
+- **Stage 9 — Engineering polish:** tests, CI, Docker, documentation, deployment
 
-## Instructions to run
-Jupyter Notebook can be run using Google Colab or locally using Anaconda Navigator.
+## Notes
 
-**Steps to run using Google Colab**
-1. Upload the dataset
-2. Click on Runtime -> Run all / Restart and Run all
+The earlier repository contained notebooks, generated artifacts, experimental model files, and unrelated email-scanning code from an unfinished prototype. Those files were intentionally removed from the current branch so the project can be rebuilt with a clear, auditable implementation. Historical commits remain available in Git history.
 
-## Libraries Used
-1. [Numpy](https://numpy.org/)
-2. [Pandas](https://pandas.pydata.org/)
-3. [Matplotlib](https://matplotlib.org/)
-4. [Seaborn](https://seaborn.pydata.org/)
-5. [Scikit-learn](https://scikit-learn.org/stable/index.html)
-
-## Report 
-![1](Images/Report-1.jpg)
-![2](Images/Report-2.jpg)
-![3](Images/Report-3.jpg)
-![4](Images/Report-4.jpg)
-![5](Images/Report-5.jpg)
-![6](Images/Report-6.jpg)
+No legacy performance claim should be treated as a final result until it has been reproduced using the new leakage-safe evaluation pipeline.
