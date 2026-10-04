@@ -1,7 +1,7 @@
 """Reusable exploratory analysis and business risk segmentation."""
 
-from dataclasses import asdict, dataclass
 import json
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import pandas as pd
