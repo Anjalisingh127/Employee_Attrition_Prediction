@@ -4,41 +4,76 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 ## Project status
 
-This repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project. The current milestone establishes a clean project baseline and preserves the original public dataset for the next modeling stages.
+The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
+
+**Current milestone: Stage 1.1 — data foundation and validation.**
 
 ## Contributors
 
 - Anjali Singh — [@Anjalisingh127](https://github.com/Anjalisingh127)
 - Gauri Jakhmola — [@gaurijakhmola](https://github.com/gaurijakhmola)
 
+## Current engineering stack
+
+- Python 3.13+
+- pandas
+- Pydantic + pydantic-settings
+- pytest
+- Ruff
+- `pyproject.toml` packaging with a `src/` layout
+- environment-based configuration through local `.env` files
+
+The committed `.env.example` documents configuration keys. The real `.env` is intentionally ignored and must never contain committed secrets.
+
+## Stage 1.1: dataset contract
+
+The validation layer currently verifies:
+
+- exactly 1,470 rows and 35 columns;
+- target values are exactly `Yes` and `No`;
+- zero missing values and zero duplicate rows;
+- `EmployeeNumber` is unique for all 1,470 records;
+- `EmployeeCount`, `Over18`, and `StandardHours` are invariant;
+- the source contains 237 attrition cases and 1,233 non-attrition cases.
+
+Those checks turn assumptions about the dataset into executable tests instead of undocumented notebook observations.
+
+## Local setup
+
+Create or reuse a virtual environment, then install the project in editable mode with development tools:
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+Copy-Item .env.example .env
+```
+
+Validate the dataset:
+
+```powershell
+attrition-validate
+```
+
+Run automated quality checks:
+
+```powershell
+python -m pytest
+python -m ruff check .
+```
+
 ## Dataset
 
-The project uses the public IBM HR Analytics Employee Attrition dataset with 1,470 employee records and 35 columns. It is a benchmark/synthetic dataset and should not be interpreted as production HR data.
-
-Source data is stored in:
+The project uses the public IBM HR Analytics Employee Attrition dataset. It contains 1,470 employee records and 35 columns and is a benchmark/synthetic dataset rather than production HR data.
 
 ```text
 data/WA_Fn-UseC_-HR-Employee-Attrition.csv
 ```
 
+See `docs/data_dictionary.md` for the current feature-treatment and leakage policy.
+
 ## Target architecture
 
-The finished project will include:
-
-1. reproducible data validation and preprocessing;
-2. exploratory attrition analysis;
-3. business-motivated feature engineering;
-4. leakage-safe class-imbalance handling;
-5. model comparison across Logistic Regression, Random Forest, XGBoost, and LightGBM;
-6. stratified cross-validation and hyperparameter tuning;
-7. evaluation with precision, recall, F1, ROC-AUC, PR-AUC, and confusion matrices;
-8. probability threshold analysis and false-negative review;
-9. SHAP-based global and employee-level explainability;
-10. an interactive Streamlit HR analytics and risk-prediction dashboard.
-
-## Important evaluation principle
-
-Accuracy alone is not sufficient for this problem. Because the positive attrition class is imbalanced, the project will prioritize recall, F1, ROC-AUC, PR-AUC, calibration, and interpretability. Any final resume metrics will come from the rebuilt leakage-safe pipeline rather than the legacy prototype.
+The finished project will include reproducible preprocessing, business-motivated feature engineering, leakage-safe imbalance handling, Logistic Regression/Random Forest/XGBoost/LightGBM comparisons, stratified cross-validation, hyperparameter tuning, threshold analysis, SHAP explainability, and an interactive Streamlit application.
 
 ## Repository roadmap
 
@@ -50,10 +85,12 @@ Accuracy alone is not sufficient for this problem. Because the positive attritio
 - **Stage 6 — Tuning & evaluation:** stratified 5-fold CV and final test metrics
 - **Stage 7 — Explainability:** feature importance, permutation importance, SHAP
 - **Stage 8 — Streamlit application:** workforce analytics and employee risk scoring
-- **Stage 9 — Engineering polish:** tests, CI, Docker, documentation, deployment
+- **Stage 9 — Engineering polish:** CI, Docker, documentation, and deployment
 
-## Notes
+## Evaluation principle
 
-The earlier repository contained notebooks, generated artifacts, experimental model files, and unrelated email-scanning code from an unfinished prototype. Those files were intentionally removed from the current branch so the project can be rebuilt with a clear, auditable implementation. Historical commits remain available in Git history.
+Accuracy alone is not sufficient for an imbalanced attrition problem. Final model selection will consider recall, precision, F1, ROC-AUC, PR-AUC, calibration, threshold behavior, and interpretability. No legacy performance claim will be reused unless reproduced through the rebuilt leakage-safe pipeline.
 
-No legacy performance claim should be treated as a final result until it has been reproduced using the new leakage-safe evaluation pipeline.
+## Repository history
+
+The earlier repository contained downloaded notebooks, generated artifacts, experimental model files, and unrelated email-scanning code from an unfinished prototype. Those files were removed from the current branch while historical commits were preserved.

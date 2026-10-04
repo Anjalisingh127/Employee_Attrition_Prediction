@@ -8,6 +8,11 @@ __pycache__/
 venv/
 env/
 
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
 # Tooling
 .pytest_cache/
 .ruff_cache/
@@ -25,8 +30,6 @@ htmlcov/
 Thumbs.db
 
 # Secrets
-.env
-.env.*
 credentials.json
 token.json
 
