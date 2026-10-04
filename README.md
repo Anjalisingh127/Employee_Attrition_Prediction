@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 2.1 — reproducible EDA and business risk segmentation.**
+**Current milestone: Stage 2.2 — reproducible visual analysis and documented business findings.**
 
 ## Contributors
 
@@ -61,7 +61,18 @@ attrition-eda
 
 See `docs/eda_protocol.md` for the analysis and interpretation rules.
 
+## Stage 2.2: visual analysis and findings
+
+The project now generates a focused set of presentation-ready EDA charts directly from the validated source data. Generated images are intentionally excluded from Git so the repository stores the code and evidence needed to reproduce them rather than stale binary outputs.
+
+```powershell
+attrition-eda-charts
+```
+
+The documented findings in `docs/eda_findings.md` highlight verified associations around overtime, job role, business travel, satisfaction, work-life balance, and selected numeric workforce measures. They are not presented as causal effects.
+
 ## Local setup
+
 
 
 
