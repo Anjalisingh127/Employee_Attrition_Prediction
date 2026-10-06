@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 5 — leakage-safe class-imbalance experiments.**
+**Current milestone: Stage 6.1 — training-only two-pass hyperparameter tuning.**
 
 ## Contributors
 
@@ -121,7 +121,20 @@ The command compares six Logistic Regression/Random Forest strategy combinations
 
 See `docs/imbalance_experiments.md` for the experimental protocol.
 
+## Stage 6.1: hyperparameter tuning
+
+The three strongest Stage 5 candidates now enter a two-pass tuning workflow: bounded `RandomizedSearchCV` followed by a targeted `GridSearchCV` around each randomized-search winner. PR-AUC is the refit metric, and every search uses shuffled Stratified 5-Fold CV on the 1,176-row training partition only.
+
+Run:
+
+```powershell
+attrition-tune
+```
+
+The final 294-row holdout remains untouched. See `docs/hyperparameter_tuning.md` for search spaces, leakage controls, and the refinement strategy.
+
 ## Local setup
+
 
 
 
