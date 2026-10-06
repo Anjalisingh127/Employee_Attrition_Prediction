@@ -4,11 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "employee-attrition-analytics"
-version = "0.7.0"
+version = "0.8.0"
 description = "Leakage-safe employee attrition prediction and HR analytics project."
 readme = "README.md"
 requires-python = ">=3.13,<3.15"
 dependencies = [
+  "imbalanced-learn>=0.14,<0.15",
   "matplotlib>=3.10,<4",
   "numpy>=2.3,<3",
   "pandas>=2.3,<4",
@@ -29,6 +30,7 @@ attrition-eda = "attrition.eda:main"
 attrition-eda-charts = "attrition.visualization:main"
 attrition-baselines = "attrition.modeling:main"
 attrition-compare = "attrition.diagnostics:main"
+attrition-imbalance = "attrition.imbalance:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/attrition"]

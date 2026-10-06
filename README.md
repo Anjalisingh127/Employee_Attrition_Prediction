@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 4.2 — baseline comparison, model ranking, and fold-stability diagnostics.**
+**Current milestone: Stage 5 — leakage-safe class-imbalance experiments.**
 
 ## Contributors
 
@@ -107,7 +107,22 @@ The command regenerates a CSV comparison table and JSON diagnostics under `repor
 
 See `docs/baseline_diagnostics.md` for the ranking and interpretation policy.
 
+## Stage 5: imbalance handling
+
+The two predictive baselines now enter controlled imbalance experiments using class weighting, RandomOverSampler, and SMOTE. Resampling is implemented with an imbalanced-learn pipeline after preprocessing and occurs only inside each cross-validation training fold.
+
+Run:
+
+```powershell
+attrition-imbalance
+```
+
+The command compares six Logistic Regression/Random Forest strategy combinations using the same Stratified 5-Fold CV and metrics as Stage 4. The final 294-row holdout remains untouched.
+
+See `docs/imbalance_experiments.md` for the experimental protocol.
+
 ## Local setup
+
 
 
 
