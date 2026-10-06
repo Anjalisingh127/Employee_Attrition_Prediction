@@ -7,6 +7,7 @@ import pytest
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
 from attrition.data import load_dataset
+from attrition.split import create_stratified_split
 from attrition.tuning import (
     LOGISTIC_C_VALUES,
     PRIMARY_METRIC,
@@ -16,7 +17,6 @@ from attrition.tuning import (
     run_randomized_search,
     targeted_grid,
 )
-from attrition.split import create_stratified_split
 
 DATASET = Path("data/WA_Fn-UseC_-HR-Employee-Attrition.csv")
 
