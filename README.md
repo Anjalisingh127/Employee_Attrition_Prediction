@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 6.1 — training-only two-pass hyperparameter tuning.**
+**Current milestone: Stage 6.2 — training-only threshold analysis and calibration.**
 
 ## Contributors
 
@@ -133,7 +133,22 @@ attrition-tune
 
 The final 294-row holdout remains untouched. See `docs/hyperparameter_tuning.md` for search spaces, leakage controls, and the refinement strategy.
 
+## Stage 6.2: threshold analysis and calibration
+
+The tuned Logistic Regression model is now evaluated with out-of-fold probabilities to select a decision threshold without touching the final test set. The project also compares uncalibrated, sigmoid-calibrated, and isotonic-calibrated probabilities using Brier score and log loss.
+
+Run:
+
+```powershell
+attrition-calibrate
+```
+
+The threshold policy maximizes F1 without inventing business cost weights, while calibration is selected by lowest out-of-fold Brier score. The final 294-row holdout remains untouched.
+
+See `docs/threshold_calibration.md` for the full methodology.
+
 ## Local setup
+
 
 
 
