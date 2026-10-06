@@ -35,7 +35,12 @@ def test_resampling_occurs_after_preprocessing_and_before_model(split) -> None:
     ros = experiments["logistic_random_oversampling"]
     smote = experiments["logistic_smote"]
 
-    assert list(ros.named_steps) == [\n        "business_features",\n        "columns",\n        "sampler",\n        "model",\n    ]
+    assert list(ros.named_steps) == [
+        "business_features",
+        "columns",
+        "sampler",
+        "model",
+    ]
     assert isinstance(ros.named_steps["sampler"], RandomOverSampler)
     assert isinstance(smote.named_steps["sampler"], SMOTE)
 
