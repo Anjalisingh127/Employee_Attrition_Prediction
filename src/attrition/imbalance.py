@@ -35,13 +35,12 @@ def build_imbalance_experiments(
 ) -> dict[str, ImbPipeline]:
     """Build unfitted pipelines for class weighting and fold-local resampling."""
 
-    preprocessor = build_preprocessor(X_train)
-
     def pipeline(
         estimator: ClassifierMixin,
         sampler: object | None = None,
     ) -> ImbPipeline:
-        preprocessing_steps = list(build_preprocessor(X_train).steps)\n        steps: list[tuple[str, object]] = [*preprocessing_steps]
+        preprocessing_steps = list(build_preprocessor(X_train).steps)
+        steps: list[tuple[str, object]] = [*preprocessing_steps]
         if sampler is not None:
             steps.append(("sampler", sampler))
         steps.append(("model", estimator))
