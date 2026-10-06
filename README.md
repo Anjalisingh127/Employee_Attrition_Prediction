@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 3 — deterministic feature engineering and leakage-safe preprocessing.**
+**Current milestone: Stage 4.1 — leakage-safe baseline modeling with stratified 5-fold cross-validation.**
 
 ## Contributors
 
@@ -79,7 +79,22 @@ The preprocessing layer then combines those features with training-fitted numeri
 
 See `docs/preprocessing.md` for the schema and leakage controls.
 
+## Stage 4.1: baseline modeling
+
+The first predictive benchmark compares a class-prior dummy baseline, Logistic Regression, and Random Forest using training-only Stratified 5-Fold Cross-Validation. Every estimator contains the complete Stage 3 preprocessing workflow, so learned preprocessing is refitted independently inside each fold.
+
+Run the reproducible baseline report with:
+
+```powershell
+attrition-baselines
+```
+
+The report includes accuracy, precision, recall, F1, ROC-AUC, and PR-AUC with fold-level values and aggregate variation. The 294-row final test partition remains untouched.
+
+See `docs/baseline_modeling.md` for the evaluation protocol.
+
 ## Local setup
+
 
 
 
