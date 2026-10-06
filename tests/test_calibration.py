@@ -32,7 +32,7 @@ def test_tuned_logistic_uses_stage_6_1_parameters(split) -> None:
     pipeline = build_tuned_logistic(split.X_train)
     model = pipeline.named_steps["model"]
 
-    assert model.C == pytest.approx(0.3)
+    assert pytest.approx(0.3) == model.C
     assert model.penalty == "l2"
     assert model.solver == "liblinear"
 
