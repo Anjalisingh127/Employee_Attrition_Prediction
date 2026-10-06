@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 4.1 — leakage-safe baseline modeling with stratified 5-fold cross-validation.**
+**Current milestone: Stage 4.2 — baseline comparison, model ranking, and fold-stability diagnostics.**
 
 ## Contributors
 
@@ -93,7 +93,22 @@ The report includes accuracy, precision, recall, F1, ROC-AUC, and PR-AUC with fo
 
 See `docs/baseline_modeling.md` for the evaluation protocol.
 
+## Stage 4.2: comparison and diagnostics
+
+Stage 4.1 results now feed a reproducible comparison layer that ranks baselines by PR-AUC, then recall and ROC-AUC, without using an arbitrary weighted score. It also reports fold-level stability through standard deviation and observed min/max ranges.
+
+Run:
+
+```powershell
+attrition-compare
+```
+
+The command regenerates a CSV comparison table and JSON diagnostics under `reports/generated/`. These artifacts are ignored by Git and can always be reproduced from the validated training workflow. The 294-row final holdout is still not evaluated.
+
+See `docs/baseline_diagnostics.md` for the ranking and interpretation policy.
+
 ## Local setup
+
 
 
 
