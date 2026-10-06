@@ -4,7 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from imblearn.over_sampling import RandomOverSampler, SMOTE
+from imblearn.over_sampling import SMOTE, RandomOverSampler
 from sklearn.linear_model import LogisticRegression
 
 from attrition.data import load_dataset
@@ -35,7 +35,7 @@ def test_resampling_occurs_after_preprocessing_and_before_model(split) -> None:
     ros = experiments["logistic_random_oversampling"]
     smote = experiments["logistic_smote"]
 
-    assert list(ros.named_steps) == ["preprocessor", "sampler", "model"]
+    assert list(ros.named_steps) == [\n        "business_features",\n        "columns",\n        "sampler",\n        "model",\n    ]
     assert isinstance(ros.named_steps["sampler"], RandomOverSampler)
     assert isinstance(smote.named_steps["sampler"], SMOTE)
 
@@ -44,7 +44,7 @@ def test_class_weight_strategy_does_not_add_sampler(split) -> None:
     experiments = build_imbalance_experiments(split.X_train)
     pipeline = experiments["logistic_class_weight"]
 
-    assert list(pipeline.named_steps) == ["preprocessor", "model"]
+    assert list(pipeline.named_steps) == ["business_features", "columns", "model"]
     assert pipeline.named_steps["model"].class_weight == "balanced"
 
 
