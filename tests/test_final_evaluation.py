@@ -15,7 +15,7 @@ from attrition.final_evaluation import (
 
 
 def test_final_policy_constants_are_frozen() -> None:
-    assert FINAL_THRESHOLD == pytest.approx(0.38)
+    assert pytest.approx(0.38) == FINAL_THRESHOLD
     assert FINAL_CALIBRATION == "isotonic"
     assert CALIBRATION_CV == 3
 
