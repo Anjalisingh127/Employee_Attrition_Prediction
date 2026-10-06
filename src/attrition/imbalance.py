@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from imblearn.over_sampling import RandomOverSampler, SMOTE
+from imblearn.over_sampling import SMOTE, RandomOverSampler
 from imblearn.pipeline import Pipeline as ImbPipeline
 from sklearn.base import ClassifierMixin
 from sklearn.ensemble import RandomForestClassifier
@@ -14,7 +14,7 @@ from sklearn.model_selection import StratifiedKFold, cross_validate
 
 from attrition.config import get_settings
 from attrition.data import load_dataset, validate_dataset
-from attrition.modeling import BaselineResult, METRIC_NAMES, MetricSummary, build_scoring
+from attrition.modeling import METRIC_NAMES, BaselineResult, MetricSummary, build_scoring
 from attrition.preprocessing import build_preprocessor
 from attrition.split import create_stratified_split
 
@@ -41,7 +41,7 @@ def build_imbalance_experiments(
         estimator: ClassifierMixin,
         sampler: object | None = None,
     ) -> ImbPipeline:
-        steps: list[tuple[str, object]] = [("preprocessor", preprocessor)]
+        preprocessing_steps = list(build_preprocessor(X_train).steps)\n        steps: list[tuple[str, object]] = [*preprocessing_steps]
         if sampler is not None:
             steps.append(("sampler", sampler))
         steps.append(("model", estimator))
