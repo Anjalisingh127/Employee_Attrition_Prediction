@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 6.2 — training-only threshold analysis and calibration.**
+**Current milestone: Stage 6.3 — frozen final holdout evaluation.**
 
 ## Contributors
 
@@ -147,7 +147,22 @@ The threshold policy maximizes F1 without inventing business cost weights, while
 
 See `docs/threshold_calibration.md` for the full methodology.
 
+## Stage 6.3: final holdout evaluation
+
+The model policy is now frozen: tuned Logistic Regression (`C=0.3`, L2), isotonic calibration, and decision threshold `0.38`. Stage 6.3 fits that frozen policy on the full training partition and evaluates the reserved 294-row holdout exactly once.
+
+Run:
+
+```powershell
+attrition-final-eval
+```
+
+The final report includes threshold-dependent classification metrics, ROC-AUC, PR-AUC, Brier score, log loss, and confusion-matrix counts. After observing these results, the project will not modify the model based on the holdout.
+
+See `docs/final_holdout_evaluation.md` for the final-evaluation protocol.
+
 ## Local setup
+
 
 
 
