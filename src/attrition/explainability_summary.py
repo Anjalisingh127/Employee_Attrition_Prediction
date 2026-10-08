@@ -246,54 +246,69 @@ def render_recruiter_report(summary: dict[str, object]) -> str:
     ap = summary["permutation_validation"]["average_precision"]
     roc = summary["permutation_validation"]["roc_auc"]
 
-    return f"""# Explainability Summary
-
-## Executive summary
-
-The frozen employee-attrition model is explained through three complementary global methods: Logistic Regression coefficients, cross-validated permutation importance, and SHAP. Local SHAP explanations are also available for individual training-partition demonstrations.
-
-The strongest conclusions are based on **cross-method agreement**, not a single importance chart. The report intentionally avoids causal language: these features explain model behavior in the IBM benchmark dataset and should not be interpreted as proven causes of employee attrition.
-
-## Cross-method signals
-
-{feature_lines}
-
-## Directional model terms
-
-### Higher modeled attrition log-odds
-
-{higher_lines}
-
-### Lower modeled attrition log-odds
-
-{lower_lines}
-
-These signed terms come from the frozen Logistic Regression decision function. Categorical one-hot terms should be interpreted as encoded category contributions rather than standalone interventions.
-
-## Validation context
-
-Permutation importance was measured on held-out folds of the training partition. The frozen calibrated policy achieved mean Average Precision **{ap['mean']:.3f} ± {ap['std']:.3f}** and mean ROC-AUC **{roc['mean']:.3f} ± {roc['std']:.3f}** across those folds.
-
-## Explainability architecture
-
-- **Coefficients:** signed linear weights and odds-ratio interpretation.
-- **Permutation importance:** predictive dependence on original business features through the full calibrated pipeline.
-- **Global SHAP:** average transformed-feature contribution magnitude plus row-level direction.
-- **Local SHAP:** employee-level risk-increasing and risk-reducing contributions with an additivity check.
-
-## Guardrails
-
-- Explainability is descriptive of model behavior, not causal HR evidence.
-- Correlated variables may divide importance.
-- SHAP and coefficients explain the underlying Logistic Regression score; isotonic calibration is separate.
-- The final 294-row holdout is not reused for explainability.
-- No post-holdout model, threshold, calibration, or preprocessing changes are made from these findings.
-
-## Recruiter takeaway
-
-This project does not stop at a headline accuracy number. It combines leakage-safe model development, frozen final evaluation, calibration and thresholding, and multiple complementary explanation methods so both global model behavior and individual predictions can be inspected reproducibly.
-"""
-
+    paragraphs = [
+        "# Explainability Summary",
+        "## Executive summary",
+        (
+            "The frozen employee-attrition model is explained through three complementary "
+            "global methods: Logistic Regression coefficients, cross-validated permutation "
+            "importance, and SHAP. Local SHAP explanations are also available for "
+            "individual training-partition demonstrations."
+        ),
+        (
+            "The strongest conclusions are based on **cross-method agreement**, not a "
+            "single importance chart. The report intentionally avoids causal language: "
+            "these features explain model behavior in the IBM benchmark dataset and "
+            "should not be interpreted as proven causes of employee attrition."
+        ),
+        "## Cross-method signals",
+        feature_lines,
+        "## Directional model terms",
+        "### Higher modeled attrition log-odds",
+        higher_lines,
+        "### Lower modeled attrition log-odds",
+        lower_lines,
+        (
+            "These signed terms come from the frozen Logistic Regression decision "
+            "function. Categorical one-hot terms should be interpreted as encoded "
+            "category contributions rather than standalone interventions."
+        ),
+        "## Validation context",
+        (
+            "Permutation importance was measured on held-out folds of the training "
+            f"partition. The frozen calibrated policy achieved mean Average Precision "
+            f"**{ap['mean']:.3f} ± {ap['std']:.3f}** and mean ROC-AUC "
+            f"**{roc['mean']:.3f} ± {roc['std']:.3f}** across those folds."
+        ),
+        "## Explainability architecture",
+        (
+            "- **Coefficients:** signed linear weights and odds-ratio interpretation.\n"
+            "- **Permutation importance:** predictive dependence on original business "
+            "features through the full calibrated pipeline.\n"
+            "- **Global SHAP:** average transformed-feature contribution magnitude plus "
+            "row-level direction.\n"
+            "- **Local SHAP:** employee-level risk-increasing and risk-reducing "
+            "contributions with an additivity check."
+        ),
+        "## Guardrails",
+        (
+            "- Explainability is descriptive of model behavior, not causal HR evidence.\n"
+            "- Correlated variables may divide importance.\n"
+            "- SHAP and coefficients explain the underlying Logistic Regression score; "
+            "isotonic calibration is separate.\n"
+            "- The final 294-row holdout is not reused for explainability.\n"
+            "- No post-holdout model, threshold, calibration, or preprocessing changes "
+            "are made from these findings."
+        ),
+        "## Recruiter takeaway",
+        (
+            "This project does not stop at a headline accuracy number. It combines "
+            "leakage-safe model development, frozen final evaluation, calibration and "
+            "thresholding, and multiple complementary explanation methods so both global "
+            "model behavior and individual predictions can be inspected reproducibly."
+        ),
+    ]
+    return "\n\n".join(paragraphs) + "\n"
 
 def save_explainability_summary(
     summary: dict[str, object],
