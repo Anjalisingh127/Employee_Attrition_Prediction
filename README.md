@@ -27,7 +27,7 @@ The system implements an end-to-end employee attrition modeling workflow coverin
 - cross-method explainability reporting;
 - automated tests and static code-quality checks.
 
-The current model and explainability workflow is complete. The next development phase is the interactive Streamlit application and deployment engineering.
+The model and explainability workflow is complete, and the repository now includes the foundation of an interactive Streamlit application for presenting validated dataset and model information.
 
 ---
 
@@ -528,7 +528,7 @@ Employee_Attrition_Prediction/
 │
 ├── src/
 │   └── attrition/
-│       ├── calibration.py
+│       ├── app_pages.py\n│       ├── app_runtime.py\n│       ├── calibration.py
 │       ├── coefficients.py
 │       ├── config.py
 │       ├── data.py
@@ -641,7 +641,7 @@ Ruff: All checks passed
 - pytest
 - Ruff
 - Hatchling / `pyproject.toml`
-- Git / GitHub
+- Streamlit\n- Git / GitHub
 
 ---
 
