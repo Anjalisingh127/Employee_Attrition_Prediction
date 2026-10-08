@@ -1,77 +1,204 @@
 # Employee Attrition Prediction & HR Analytics Platform
 
-A reproducible machine learning project for analyzing employee attrition patterns, estimating attrition risk, and explaining model behavior using the IBM HR Analytics Employee Attrition dataset.
+A production-style machine learning project for analyzing employee attrition patterns, estimating attrition risk, and explaining model behavior using the IBM HR Analytics Employee Attrition dataset.
 
-The project was rebuilt from an earlier academic prototype into a leakage-safe, testable ML workflow with deterministic data splitting, cross-validation, imbalance experiments, hyperparameter tuning, probability calibration, threshold selection, final holdout evaluation, and multi-method explainability.
+The project is designed around reproducibility, leakage-safe evaluation, calibrated risk estimation, and interpretable predictions rather than relying on a single accuracy score.
 
-## Project status
+---
 
-**Completed through Stage 7.5 — Explainability Summary & Recruiter-Facing Report**
+## Overview
 
-Current validated state:
+The system implements an end-to-end employee attrition modeling workflow covering:
 
-- 1,470 validated employee records
-- 30 original model inputs after removing target, identifier, and invariant fields
-- deterministic 80/20 stratified split
-- 1,176 training rows
-- 294-row final holdout
-- frozen final Logistic Regression policy
-- isotonic probability calibration
-- decision threshold: **0.38**
-- final holdout evaluated once and then frozen
-- coefficient, permutation, global SHAP, and local SHAP explainability
-- cross-method recruiter-facing explanation summary
-- **102 automated tests passing**
-- Ruff static checks passing
+- automated dataset validation;
+- deterministic stratified train/holdout splitting;
+- business-oriented feature engineering;
+- reusable preprocessing pipelines;
+- Logistic Regression and Random Forest baselines;
+- class weighting, RandomOverSampler, and SMOTE experiments;
+- stratified cross-validation;
+- two-stage hyperparameter tuning;
+- probability calibration;
+- decision-threshold optimization;
+- one-time final holdout evaluation;
+- coefficient analysis;
+- permutation importance;
+- global and local SHAP explainability;
+- cross-method explainability reporting;
+- automated tests and static code-quality checks.
 
-The remaining project work is the Streamlit application and final engineering/deployment polish.
+The current model and explainability workflow is complete. The next development phase is the interactive Streamlit application and deployment engineering.
 
-## Contributors
+---
 
-- Anjali Singh — [@Anjalisingh127](https://github.com/Anjalisingh127)
-- Gauri Jakhmola — [@gaurijakhmola](https://github.com/gaurijakhmola)
+## Key Results
 
-## Final model
+### Final model
 
-The final model policy was selected entirely from the training partition before the holdout was evaluated.
-
-| Component | Frozen configuration |
+| Component | Configuration |
 | --- | --- |
 | Model | Logistic Regression |
 | Regularization | L2 |
 | C | 0.3 |
-| Solver | liblinear |
+| Solver | `liblinear` |
 | Probability calibration | Isotonic |
 | Calibration CV | 3 folds |
 | Decision threshold | 0.38 |
 
-The 294-row final holdout was evaluated only after model choice, calibration method, and threshold had been frozen.
+The model policy was selected entirely from the training partition before the final holdout was evaluated.
 
-## Final holdout results
+### Final holdout performance
+
+The frozen policy was evaluated once on a reserved 294-row holdout set.
 
 | Metric | Result |
 | --- | ---: |
 | Accuracy | **87.07%** |
 | Precision | **62.16%** |
 | Recall | **48.94%** |
-| F1 | **54.76%** |
+| F1 Score | **54.76%** |
 | ROC-AUC | **81.08%** |
 | Average Precision | **58.39%** |
-| Brier score | **0.0967** |
-| Log loss | **0.4393** |
+| Brier Score | **0.0967** |
+| Log Loss | **0.4393** |
 
-Confusion matrix:
+### Confusion matrix
 
 |  | Predicted No | Predicted Yes |
 | --- | ---: | ---: |
 | Actual No | **233** | **14** |
 | Actual Yes | **24** | **23** |
 
-> Some earlier project outputs use the key name `pr_auc` while calling
-> `average_precision_score`. In this README, that value is described precisely as
+> Some internal reports use the historical key name `pr_auc` while calling
+> `average_precision_score`. In this README, that metric is referred to correctly as
 > **Average Precision (AP)**.
 
-These results are treated as the final generalization estimate. No later explainability work changes the model, preprocessing, calibration method, or threshold in response to holdout performance.
+No model, preprocessing, calibration, or threshold changes are made using the observed holdout results.
+
+---
+
+## System Architecture
+
+```text
+┌─────────────────────────────────────┐
+│ IBM HR Analytics Dataset            │
+│ 1,470 employee records              │
+└──────────────────┬──────────────────┘
+                   │
+                   v
+┌─────────────────────────────────────┐
+│ Data Validation                     │
+│                                     │
+│ • schema checks                     │
+│ • missing / duplicate checks        │
+│ • target validation                 │
+│ • invariant-column validation       │
+└──────────────────┬──────────────────┘
+                   │
+                   v
+┌─────────────────────────────────────┐
+│ Stratified Train / Holdout Split    │
+│                                     │
+│ Training: 1,176 rows                │
+│ Final holdout: 294 rows             │
+└───────────────┬─────────────────────┘
+                │
+                │ training partition only
+                v
+┌─────────────────────────────────────┐
+│ Feature Engineering                 │
+│                                     │
+│ • IncomePerJobLevel                 │
+│ • CompanyTenureRatio                │
+│ • RoleTenureRatio                   │
+│ • PromotionWaitRatio                │
+│ • EarlyCareer                       │
+└──────────────────┬──────────────────┘
+                   │
+                   v
+┌─────────────────────────────────────┐
+│ Preprocessing Pipeline              │
+│                                     │
+│ • numeric scaling                   │
+│ • categorical one-hot encoding      │
+│ • fold-local fitted transformations │
+└──────────────────┬──────────────────┘
+                   │
+                   v
+┌─────────────────────────────────────┐
+│ Model Development                   │
+│                                     │
+│ • Dummy baseline                    │
+│ • Logistic Regression               │
+│ • Random Forest                     │
+│ • class weighting                   │
+│ • RandomOverSampler                 │
+│ • SMOTE                             │
+└──────────────────┬──────────────────┘
+                   │
+                   v
+┌─────────────────────────────────────┐
+│ Training Evaluation & Tuning        │
+│                                     │
+│ • Stratified 5-Fold CV              │
+│ • RandomizedSearchCV                │
+│ • GridSearchCV                      │
+│ • Average Precision / ROC-AUC       │
+└──────────────────┬──────────────────┘
+                   │
+                   v
+┌─────────────────────────────────────┐
+│ Calibration & Threshold Selection   │
+│                                     │
+│ • sigmoid vs isotonic               │
+│ • Brier score / log loss            │
+│ • threshold optimization            │
+└──────────────────┬──────────────────┘
+                   │
+                   v
+┌─────────────────────────────────────┐
+│ Frozen Prediction Policy            │
+│                                     │
+│ Logistic Regression                 │
+│ C = 0.3, L2, liblinear              │
+│ Isotonic calibration                │
+│ Threshold = 0.38                    │
+└───────────────┬─────────────────────┘
+                │
+                ├──────────────────────────────┐
+                │                              │
+                v                              v
+┌──────────────────────────────┐   ┌──────────────────────────────┐
+│ Final Holdout Evaluation     │   │ Explainability              │
+│                              │   │                              │
+│ 294 unseen rows              │   │ • coefficients              │
+│ one-time evaluation          │   │ • permutation importance    │
+│                              │   │ • global SHAP               │
+└──────────────────────────────┘   │ • local SHAP                │
+                                   │ • consensus reporting        │
+                                   └──────────────┬───────────────┘
+                                                  │
+                                                  v
+                                   ┌──────────────────────────────┐
+                                   │ Application Layer            │
+                                   │                              │
+                                   │ Streamlit dashboard          │
+                                   │ risk prediction              │
+                                   │ explainable results          │
+                                   │                              │
+                                   │ planned                      │
+                                   └──────────────────────────────┘
+```
+
+### Architecture principles
+
+- **Leakage prevention:** learned preprocessing, resampling, calibration, tuning, and threshold selection are performed using training data only.
+- **Reproducibility:** major workflows are implemented as Python modules and CLI commands rather than notebook-only steps.
+- **Separation of concerns:** validation, feature engineering, modeling, evaluation, calibration, and explainability are independent modules.
+- **Frozen evaluation policy:** the final holdout is not reused for post-evaluation model selection.
+- **Interpretability:** global and local explanations are provided separately from probability calibration.
+
+---
 
 ## Dataset
 
@@ -81,126 +208,141 @@ The project uses the IBM HR Analytics Employee Attrition dataset:
 data/WA_Fn-UseC_-HR-Employee-Attrition.csv
 ```
 
-Validated dataset contract:
+Validated properties:
 
-- 1,470 rows
-- 35 source columns
+- **1,470 rows**
+- **35 source columns**
 - target: `Attrition`
 - 237 attrition cases
 - 1,233 non-attrition cases
-- attrition rate: approximately 16.12%
+- approximately **16.12% attrition rate**
 - no missing values
 - no duplicate rows
-- `EmployeeNumber` unique
-- `EmployeeCount`, `Over18`, and `StandardHours` invariant
+- unique `EmployeeNumber`
+- invariant `EmployeeCount`, `Over18`, and `StandardHours`
 
-For modeling, the target, employee identifier, and invariant columns are excluded before learning begins.
+For modeling, the target column, employee identifier, and invariant columns are excluded before learning begins, leaving **30 original model inputs**.
 
-See `docs/data_dictionary.md` for feature treatment details.
+See [`docs/data_dictionary.md`](docs/data_dictionary.md) for feature treatment details.
 
-## Leakage-safe evaluation design
+---
 
-The project creates the final holdout before any learned transformation.
+## Evaluation Strategy
+
+The dataset is split before any learned transformation:
 
 ```text
 Validated dataset
-      |
-      v
-Stratified 80/20 split
-      |
-      +------------------------------+
-      |                              |
-      v                              v
-Training partition              Final holdout
-1,176 rows                      294 rows
-      |                              |
-      | CV / tuning / calibration    |
-      | threshold selection          |
-      | explainability               |
-      v                              |
-Frozen model policy                  |
-      |                              |
-      +----------------------------->|
-                                     v
-                           One-time final evaluation
+        |
+        v
+Stratified 80 / 20 split
+        |
+        +-------------------------+
+        |                         |
+        v                         v
+Training partition          Final holdout
+1,176 rows                  294 rows
+        |                         |
+        | CV / tuning             |
+        | calibration             |
+        | threshold selection     |
+        | explainability          |
+        v                         |
+Frozen model policy               |
+        |                         |
+        +------------------------>|
+                                  v
+                         One-time final evaluation
 ```
 
 Training-only operations include:
 
-- scaling
-- one-hot encoding
-- engineered features
-- resampling
-- hyperparameter search
-- calibration selection
-- threshold selection
-- explainability analysis
+- scaling;
+- categorical encoding;
+- engineered features;
+- resampling;
+- cross-validation;
+- hyperparameter search;
+- calibration selection;
+- threshold selection;
+- explainability analysis.
 
-See `docs/modeling_protocol.md` for the evaluation rules.
+See [`docs/modeling_protocol.md`](docs/modeling_protocol.md).
 
-## Feature engineering
+---
 
-Five deterministic business features are created without using the target:
+## Feature Engineering & Preprocessing
 
-- `IncomePerJobLevel`
-- `CompanyTenureRatio`
-- `RoleTenureRatio`
-- `PromotionWaitRatio`
-- `EarlyCareer`
+Five deterministic business features are generated without using the target:
 
-Numeric features are standardized and categorical features are one-hot encoded inside the model pipeline so transformations are learned independently within each cross-validation fold.
+| Feature | Purpose |
+| --- | --- |
+| `IncomePerJobLevel` | compensation relative to job level |
+| `CompanyTenureRatio` | company tenure relative to total career tenure |
+| `RoleTenureRatio` | time in current role relative to company tenure |
+| `PromotionWaitRatio` | time since promotion relative to company tenure |
+| `EarlyCareer` | identifies employees with fewer than five working years |
+
+The preprocessing pipeline applies:
+
+- numeric standardization;
+- categorical one-hot encoding with unknown-category handling;
+- business feature generation;
+- fold-local fitting during cross-validation.
 
 See:
 
-- `docs/feature_engineering.md`
-- `docs/preprocessing.md`
+- [`docs/feature_engineering.md`](docs/feature_engineering.md)
+- [`docs/preprocessing.md`](docs/preprocessing.md)
 
-## Modeling progression
+---
 
-### Baselines
+## Model Development
 
-The first benchmark compared:
+### Baseline models
 
-- class-prior Dummy Classifier
-- Logistic Regression
-- Random Forest
+The initial benchmark compared:
 
-All models were evaluated with shuffled Stratified 5-Fold Cross-Validation and full preprocessing inside each fold.
+- class-prior Dummy Classifier;
+- Logistic Regression;
+- Random Forest.
 
-The untreated Logistic Regression produced the strongest overall baseline balance and became the main candidate for later tuning.
+All models were evaluated using shuffled Stratified 5-Fold Cross-Validation with preprocessing fitted independently inside each fold.
 
-### Imbalance experiments
+The untreated Logistic Regression produced the strongest overall baseline balance and became the primary candidate for later tuning.
 
-Controlled experiments evaluated:
+### Class imbalance experiments
 
-- class weighting
-- RandomOverSampler
-- SMOTE
+Because attrition represents only about 16% of the dataset, the project evaluated:
 
-for Logistic Regression and Random Forest.
+- class weighting;
+- RandomOverSampler;
+- SMOTE.
 
-Resampling occurs only inside training folds through an imbalanced-learn pipeline.
+These were tested with Logistic Regression and Random Forest.
 
-The experiments showed the expected trade-off: class weighting improved recall substantially but reduced precision and Average Precision compared with the untreated Logistic Regression.
+Resampling is performed only inside training folds through an `imbalanced-learn` pipeline.
 
-See `docs/imbalance_experiments.md`.
+The experiments showed that class weighting increased recall substantially but reduced precision, F1, and Average Precision relative to the untreated Logistic Regression.
+
+See [`docs/imbalance_experiments.md`](docs/imbalance_experiments.md).
 
 ### Hyperparameter tuning
 
-Three candidate strategies entered a two-stage search:
+Three model strategies were carried forward:
 
-1. Logistic Regression
-2. class-weighted Logistic Regression
-3. Random Forest + SMOTE
+1. Logistic Regression;
+2. class-weighted Logistic Regression;
+3. Random Forest + SMOTE.
 
-The search used:
+The tuning workflow uses:
 
-- bounded `RandomizedSearchCV`
-- targeted `GridSearchCV`
-- shuffled Stratified 5-Fold CV
-- training data only
+- bounded `RandomizedSearchCV`;
+- targeted `GridSearchCV`;
+- shuffled Stratified 5-Fold CV;
+- training data only.
 
-The selected model was:
+The selected configuration was:
 
 ```text
 Logistic Regression
@@ -209,41 +351,43 @@ penalty = l2
 solver = liblinear
 ```
 
-See `docs/hyperparameter_tuning.md`.
+See [`docs/hyperparameter_tuning.md`](docs/hyperparameter_tuning.md).
 
-## Calibration and threshold selection
+---
 
-Stage 6.2 compared:
+## Probability Calibration & Decision Threshold
 
-- uncalibrated probabilities
-- sigmoid calibration
-- isotonic calibration
+The tuned Logistic Regression was evaluated with:
 
-using out-of-fold training predictions.
+- uncalibrated probabilities;
+- sigmoid calibration;
+- isotonic calibration.
 
-Isotonic calibration produced the best calibration quality under the predefined Brier-score-first selection policy.
+Calibration was selected using out-of-fold training predictions.
 
-The decision threshold was selected from training-only out-of-fold probabilities by maximizing F1 without inventing business cost weights.
+Isotonic calibration produced the lowest Brier score under the predefined selection rule and was frozen for the final policy.
 
-Selected threshold:
+The classification threshold was selected independently using training-only out-of-fold predictions.
 
 ```text
-0.38
+Final threshold = 0.38
 ```
 
-At the training-only selection stage, the threshold improved the recall/F1 trade-off relative to the default 0.50 threshold.
+The threshold was selected by maximizing F1 without introducing unsupported business-cost assumptions.
 
-See `docs/threshold_calibration.md`.
+See [`docs/threshold_calibration.md`](docs/threshold_calibration.md).
 
-## Explainability
+---
 
-The final model is explained through multiple complementary methods rather than one importance chart.
+## Model Explainability
 
-### 1. Logistic Regression coefficients
+The project uses multiple complementary explainability techniques rather than relying on one feature-importance chart.
 
-The transformed feature coefficients provide signed model direction and odds-ratio interpretation.
+### Logistic Regression coefficients
 
-Examples of stronger higher modeled attrition log-odds terms:
+Coefficient analysis provides signed model direction and odds-ratio interpretation.
+
+Stronger higher modeled attrition log-odds terms include:
 
 - `JobRole_Laboratory Technician`
 - `OverTime_Yes`
@@ -251,7 +395,7 @@ Examples of stronger higher modeled attrition log-odds terms:
 - `NumCompaniesWorked`
 - `YearsSinceLastPromotion`
 
-Examples of stronger lower modeled attrition log-odds terms:
+Stronger lower modeled attrition log-odds terms include:
 
 - `OverTime_No`
 - `BusinessTravel_Non-Travel`
@@ -259,22 +403,18 @@ Examples of stronger lower modeled attrition log-odds terms:
 - `JobRole_Research Director`
 - `EducationField_Other`
 
-These are model associations, not causal HR findings.
+See [`docs/coefficient_analysis.md`](docs/coefficient_analysis.md).
 
-See `docs/coefficient_analysis.md`.
+### Cross-validated permutation importance
 
-### 2. Cross-validated permutation importance
+Permutation importance measures performance degradation when an original input feature is shuffled on held-out training folds.
 
-Permutation importance measures how much validation performance decreases when an original business feature is shuffled while the fitted estimator remains unchanged.
+Cross-validated performance during this analysis:
 
-The frozen calibrated policy achieved:
+- Average Precision: **0.6695 ± 0.0527**
+- ROC-AUC: **0.8412 ± 0.0276**
 
-- mean Average Precision: **0.6695 ± 0.0527**
-- mean ROC-AUC: **0.8412 ± 0.0276**
-
-across held-out folds of the training partition.
-
-Among the strongest original-feature dependencies were:
+Strong original-feature dependencies include:
 
 - `YearsInCurrentRole`
 - `OverTime`
@@ -287,11 +427,11 @@ Among the strongest original-feature dependencies were:
 - `BusinessTravel`
 - `JobRole`
 
-See `docs/permutation_importance.md`.
+See [`docs/permutation_importance.md`](docs/permutation_importance.md).
 
-### 3. Global SHAP
+### Global SHAP
 
-`shap.LinearExplainer` explains the frozen underlying Logistic Regression decision function using the complete training background.
+Global SHAP explanations are generated using `shap.LinearExplainer` on the frozen Logistic Regression decision function.
 
 Strong global SHAP contributors include:
 
@@ -307,39 +447,36 @@ Strong global SHAP contributors include:
 - `YearsWithCurrManager`
 - `TotalWorkingYears`
 
-Generated outputs include global bar and beeswarm plots.
+Generated artifacts include:
 
-See `docs/shap_global.md`.
+- SHAP global importance table;
+- global bar plot;
+- SHAP beeswarm plot.
 
-### 4. Local SHAP
+See [`docs/shap_global.md`](docs/shap_global.md).
 
-Individual training-partition predictions can be decomposed into risk-increasing and risk-reducing contributions.
+### Local SHAP
 
-The local workflow reports:
+Individual training-partition predictions can be decomposed into:
 
-- base Logistic Regression probability
-- isotonic-calibrated probability
-- frozen threshold decision
-- strongest positive SHAP contributions
-- strongest negative SHAP contributions
-- SHAP waterfall plot
-- numerical additivity check
+- calibrated attrition probability;
+- threshold decision;
+- risk-increasing contributions;
+- risk-reducing contributions;
+- SHAP waterfall visualization;
+- numerical additivity check.
 
-SHAP explains the underlying Logistic Regression score; it does not directly decompose the nonlinear isotonic calibration mapping.
+SHAP explains the underlying Logistic Regression score. Isotonic calibration is treated as a separate probability-mapping layer.
 
-See `docs/shap_local.md`.
+See [`docs/shap_local.md`](docs/shap_local.md).
 
-### 5. Cross-method consensus
+### Cross-method consensus
 
-Stage 7.5 maps transformed terms back to shared feature families and compares rankings across:
+Global coefficient, permutation, and SHAP rankings are compared at the original feature-family level.
 
-- coefficient magnitude
-- permutation importance
-- global SHAP
+No arbitrary weighted composite score is used.
 
-No weighted composite score is invented.
-
-Features appearing in the top tier of all three methods include:
+Features supported in the top tier by **all three global explanation methods** include:
 
 - `OverTime`
 - `JobRole`
@@ -351,68 +488,26 @@ Features appearing in the top tier of all three methods include:
 - `JobInvolvement`
 - `DistanceFromHome`
 
-Additional features supported by two methods include `MaritalStatus`, `EducationField`, `RoleTenureRatio`, `Department`, `TotalWorkingYears`, and `Age`.
+Additional features supported by two methods include:
 
-See `docs/explainability_summary.md`.
+- `MaritalStatus`
+- `EducationField`
+- `RoleTenureRatio`
+- `Department`
+- `TotalWorkingYears`
+- `Age`
 
-## Project commands
+See [`docs/explainability_summary.md`](docs/explainability_summary.md).
 
-After installation, the project exposes reproducible command-line entry points:
+---
 
-| Command | Purpose |
-| --- | --- |
-| `attrition-validate` | Validate dataset contract |
-| `attrition-eda` | Generate machine-readable EDA |
-| `attrition-eda-charts` | Generate EDA visualizations |
-| `attrition-baselines` | Evaluate baseline models |
-| `attrition-compare` | Compare baseline stability and ranking |
-| `attrition-imbalance` | Run imbalance-handling experiments |
-| `attrition-tune` | Run two-stage hyperparameter tuning |
-| `attrition-calibrate` | Analyze calibration and decision thresholds |
-| `attrition-final-eval` | Reproduce the frozen final evaluation |
-| `attrition-coefficients` | Generate coefficient analysis |
-| `attrition-permutation` | Generate permutation importance |
-| `attrition-shap-global` | Generate global SHAP analysis |
-| `attrition-shap-local` | Explain an individual training row |
-| `attrition-explainability-report` | Generate the Stage 7 consensus report |
-
-## Local setup
-
-Clone the repository and create a virtual environment.
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-Install the project with development dependencies:
-
-```powershell
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
-Copy-Item .env.example .env
-```
-
-Validate the repository:
-
-```powershell
-python -m pytest
-python -m ruff check .
-```
-
-Current validated quality gate:
-
-```text
-102 tests passed
-Ruff: All checks passed
-```
-
-## Project structure
+## Project Structure
 
 ```text
 Employee_Attrition_Prediction/
 ├── data/
 │   └── WA_Fn-UseC_-HR-Employee-Attrition.csv
+│
 ├── docs/
 │   ├── baseline_diagnostics.md
 │   ├── baseline_modeling.md
@@ -430,6 +525,7 @@ Employee_Attrition_Prediction/
 │   ├── shap_global.md
 │   ├── shap_local.md
 │   └── threshold_calibration.md
+│
 ├── src/
 │   └── attrition/
 │       ├── calibration.py
@@ -451,6 +547,7 @@ Employee_Attrition_Prediction/
 │       ├── tuning.py
 │       ├── validation.py
 │       └── visualization.py
+│
 ├── tests/
 ├── .env.example
 ├── .gitignore
@@ -458,9 +555,79 @@ Employee_Attrition_Prediction/
 └── README.md
 ```
 
-Generated reports and plots are written under `reports/generated/` and intentionally ignored by Git because they can be reproduced from source.
+Generated reports and plots are stored under:
 
-## Technology stack
+```text
+reports/generated/
+```
+
+These files are ignored by Git because they are reproducible from source.
+
+---
+
+## CLI Commands
+
+After installation, the project exposes the following commands:
+
+| Command | Purpose |
+| --- | --- |
+| `attrition-validate` | validate dataset assumptions |
+| `attrition-eda` | generate machine-readable EDA |
+| `attrition-eda-charts` | generate EDA visualizations |
+| `attrition-baselines` | evaluate baseline models |
+| `attrition-compare` | compare baseline performance and stability |
+| `attrition-imbalance` | run imbalance-handling experiments |
+| `attrition-tune` | run hyperparameter tuning |
+| `attrition-calibrate` | analyze calibration and decision thresholds |
+| `attrition-final-eval` | reproduce the frozen final evaluation |
+| `attrition-coefficients` | generate Logistic Regression coefficient analysis |
+| `attrition-permutation` | generate cross-validated permutation importance |
+| `attrition-shap-global` | generate global SHAP analysis |
+| `attrition-shap-local` | explain an individual training row |
+| `attrition-explainability-report` | generate the cross-method explainability report |
+
+---
+
+## Local Setup
+
+### 1. Create a virtual environment
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### 2. Install dependencies
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+Copy-Item .env.example .env
+```
+
+### 3. Validate the dataset
+
+```powershell
+attrition-validate
+```
+
+### 4. Run quality checks
+
+```powershell
+python -m pytest
+python -m ruff check .
+```
+
+Current validated quality gate:
+
+```text
+102 tests passed
+Ruff: All checks passed
+```
+
+---
+
+## Technology Stack
 
 - Python 3.13+
 - pandas
@@ -476,23 +643,48 @@ Generated reports and plots are written under `reports/generated/` and intention
 - Hatchling / `pyproject.toml`
 - Git / GitHub
 
-## Completed roadmap
+---
 
-- [x] Stage 1 — data validation and leakage-safe train/holdout foundation
-- [x] Stage 2 — reproducible EDA and visual analysis
-- [x] Stage 3 — deterministic feature engineering and preprocessing
-- [x] Stage 4 — baseline modeling and diagnostics
-- [x] Stage 5 — imbalance-handling experiments
-- [x] Stage 6 — hyperparameter tuning, calibration, thresholding, final holdout evaluation
-- [x] Stage 7 — coefficient, permutation, global SHAP, local SHAP, explainability synthesis
-- [ ] Stage 8 — Streamlit analytics and employee-risk application
-- [ ] Stage 9 — CI/CD, Docker, deployment, final documentation polish
+## Current Development Roadmap
 
-## Interpretation and responsible-use notes
+### Implemented
+
+- dataset validation and schema checks;
+- deterministic stratified data splitting;
+- reproducible EDA;
+- business feature engineering;
+- leakage-safe preprocessing;
+- baseline model comparison;
+- imbalance-handling experiments;
+- hyperparameter tuning;
+- calibration and threshold selection;
+- final holdout evaluation;
+- coefficient analysis;
+- permutation importance;
+- global SHAP;
+- local SHAP;
+- cross-method explainability reporting;
+- automated tests and linting.
+
+### Planned
+
+- Streamlit workforce analytics dashboard;
+- interactive employee attrition-risk form;
+- local SHAP explanations in the UI;
+- model methodology/performance page;
+- application caching and validation;
+- CI/CD;
+- Docker packaging;
+- public deployment;
+- final documentation polish.
+
+---
+
+## Responsible Use
 
 This project uses a benchmark HR dataset and is intended as a machine learning engineering and analytics demonstration.
 
-Model outputs should not be interpreted as:
+Model outputs must not be interpreted as:
 
 - causal explanations of employee behavior;
 - automated employment decisions;
@@ -500,8 +692,9 @@ Model outputs should not be interpreted as:
 
 Explainability methods describe how the trained model behaves on the available data. They do not establish why an employee would leave an organization.
 
-## Repository history
+---
 
-The repository originally contained an older academic prototype with downloaded notebooks, generated model files, experimental artifacts, and unrelated email-scanning functionality.
+## Contributors
 
-The current branch was deliberately rebuilt into a clean, reproducible project while preserving historical Git commits. Legacy performance claims were not reused unless reproduced under the rebuilt leakage-safe evaluation protocol.
+- **Anjali Singh** — [@Anjalisingh127](https://github.com/Anjalisingh127)
+- **Gauri Jakhmola** — [@gaurijakhmola](https://github.com/gaurijakhmola)
