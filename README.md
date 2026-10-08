@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 6.3 — frozen final holdout evaluation.**
+**Current milestone: Stage 7.1 — Logistic Regression coefficient analysis.**
 
 ## Contributors
 
@@ -161,7 +161,22 @@ The final report includes threshold-dependent classification metrics, ROC-AUC, P
 
 See `docs/final_holdout_evaluation.md` for the final-evaluation protocol.
 
+## Stage 7.1: Logistic Regression coefficient analysis
+
+The frozen tuned Logistic Regression now has a reproducible global coefficient analysis. The explanation maps the transformed preprocessing feature names directly to the fitted coefficient vector and ranks features by positive/negative contribution to attrition log-odds.
+
+Run:
+
+```powershell
+attrition-coefficients
+```
+
+The report includes coefficients, odds ratios, absolute magnitudes, and direction. These are model explanations rather than causal HR effects. The consumed final holdout is excluded from this explainability fit.
+
+See `docs/coefficient_analysis.md` for interpretation guidance and limitations.
+
 ## Local setup
+
 
 
 
