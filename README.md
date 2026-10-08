@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 7.3 — SHAP global explainability.**
+**Current milestone: Stage 7.4 — SHAP local explainability.**
 
 ## Contributors
 
@@ -203,7 +203,28 @@ The stage generates a ranked SHAP table plus global bar and beeswarm plots. It e
 
 See `docs/shap_global.md` for methodology and limitations.
 
+## Stage 7.4: SHAP local explainability
+
+The project now supports individual training-partition explanations. For a selected row, it reports the frozen calibrated probability and threshold decision while separately decomposing the underlying Logistic Regression score into risk-increasing and risk-reducing SHAP contributions.
+
+Run the default example:
+
+```powershell
+attrition-shap-local
+```
+
+Or choose a deterministic training-row position:
+
+```powershell
+attrition-shap-local --row-position 25 --top-n 8
+```
+
+The command produces a ranked contribution table, JSON summary, and SHAP waterfall plot. These explanations are model-specific, non-causal, and do not reuse the consumed final holdout.
+
+See `docs/shap_local.md` for methodology and interpretation guidance.
+
 ## Local setup
+
 
 
 
