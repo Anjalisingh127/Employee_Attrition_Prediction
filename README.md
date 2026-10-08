@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 7.2 — cross-validated permutation importance.**
+**Current milestone: Stage 7.3 — SHAP global explainability.**
 
 ## Contributors
 
@@ -189,7 +189,22 @@ This complements Stage 7.1 coefficient analysis by measuring predictive reliance
 
 See `docs/permutation_importance.md` for methodology and interpretation limits.
 
+## Stage 7.3: SHAP global explainability
+
+The frozen tuned Logistic Regression now has a global SHAP explanation layer using `shap.LinearExplainer`. SHAP values are computed on the transformed training feature matrix and aggregated by mean absolute contribution while preserving signed row-level effects.
+
+Run:
+
+```powershell
+attrition-shap-global
+```
+
+The stage generates a ranked SHAP table plus global bar and beeswarm plots. It explains the underlying Logistic Regression decision function; isotonic calibration remains a separate probability post-processing layer. The consumed final holdout is not reused.
+
+See `docs/shap_global.md` for methodology and limitations.
+
 ## Local setup
+
 
 
 
