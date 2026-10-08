@@ -49,7 +49,11 @@ def build_shap_explanation(
         X_train,
     )
     model = fitted_pipeline.named_steps["model"]
-    explainer = shap.LinearExplainer(model, transformed)
+    masker = shap.maskers.Independent(
+        transformed,
+        max_samples=len(transformed),
+    )
+    explainer = shap.LinearExplainer(model, masker)
     explanation = explainer(transformed)
 
     if explanation.values.shape != transformed.shape:
