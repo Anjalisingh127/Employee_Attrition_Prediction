@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 7.1 — Logistic Regression coefficient analysis.**
+**Current milestone: Stage 7.2 — cross-validated permutation importance.**
 
 ## Contributors
 
@@ -175,7 +175,22 @@ The report includes coefficients, odds ratios, absolute magnitudes, and directio
 
 See `docs/coefficient_analysis.md` for interpretation guidance and limitations.
 
+## Stage 7.2: permutation importance
+
+The frozen calibrated prediction policy now has a model-agnostic global importance analysis. Original input features are shuffled on held-out folds of the training partition, and importance is measured by the resulting drop in Average Precision and ROC-AUC.
+
+Run:
+
+```powershell
+attrition-permutation
+```
+
+This complements Stage 7.1 coefficient analysis by measuring predictive reliance on original business features through the complete pipeline. The consumed final holdout is not reused.
+
+See `docs/permutation_importance.md` for methodology and interpretation limits.
+
 ## Local setup
+
 
 
 
