@@ -6,7 +6,7 @@ An end-to-end machine learning project for analyzing employee attrition patterns
 
 The repository is being rebuilt from an earlier academic prototype into a reproducible, leakage-safe portfolio project.
 
-**Current milestone: Stage 7.4 — SHAP local explainability.**
+**Current milestone: Stage 7.5 — explainability summary and recruiter-facing report.**
 
 ## Contributors
 
@@ -223,7 +223,22 @@ The command produces a ranked contribution table, JSON summary, and SHAP waterfa
 
 See `docs/shap_local.md` for methodology and interpretation guidance.
 
+## Stage 7.5: explainability summary
+
+Stage 7 now closes with a cross-method synthesis rather than relying on a single importance chart. Coefficient, permutation, and global SHAP rankings are mapped to shared feature families and compared transparently; features supported by at least two methods are highlighted without an arbitrary weighted score.
+
+Run:
+
+```powershell
+attrition-explainability-report
+```
+
+The command generates a consensus CSV, machine-readable JSON, and concise recruiter-facing Markdown report. Directional coefficient terms remain separate from feature-family consensus so categorical levels are not collapsed into misleading signed effects.
+
+See `docs/explainability_summary.md` for the consensus rule, recruiter interpretation, and limitations.
+
 ## Local setup
+
 
 
 
